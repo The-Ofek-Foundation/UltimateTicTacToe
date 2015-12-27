@@ -32,6 +32,11 @@ $(document).ready(function() {
   $('#new-game-menu').css('left', (docwidth - $('#new-game-menu').outerWidth()) / 2);
   
   new_game();
+  
+  ponder = prompt("Ponder?", "Yes").toLowerCase() == "yes" ? true:false;
+  time_to_think = parseFloat(prompt("Time to think (seconds):", "5"));
+  
+  new_game();
 });
 
 function new_game() {
