@@ -5,7 +5,7 @@ var global_ROOT;
 var expansion_const = 2.5;
 var ai_turn = false;
 var monte_carlo_trials = 10000;
-var max_trials = 100000;
+var max_trials = 500000; // Prevent Overflow
 var over;
 var prev_move;
 var x_turn_global;
@@ -35,6 +35,22 @@ $(document).ready(function() {
   
   ponder = prompt("Ponder?", "Yes").toLowerCase() == "yes" ? true:false;
   time_to_think = parseFloat(prompt("Time to think (seconds):", "5"));
+  var ai = prompt("AI turn: ", "Second");
+  
+  switch (ai.toLowerCase()) {
+    case "first":
+      ai_turn = true;
+      break;
+    case "second":
+      ai_turn = false;
+      break;
+    case "both":
+      ai_turn = "both";
+      break;
+    default:
+      ai_turn = null;
+      break;
+  }
   
   new_game();
 });
@@ -702,4 +718,17 @@ function speed_test() {
   for (total_trials = 0; total_trials < 100000; total_trials++)
     global_ROOT.choose_child();
   console.log((new Date().getTime() - start) / 1E3);
+}
+
+function efficiency_test() {
+  global_ROOT = create_MCTS_root();
+  var total_trials, start = new Date().getTime();
+  for (total_trials = 0; total_trials < 100000; total_trials++)
+    global_ROOT.choose_child();
+  console.log((new Date().getTime() - start) / 1E3);
+  setInterval(function() {
+    for (var i = 0; i < 1000; i++)
+      global_ROOT.choose_child();
+    $('#num-trials').text(global_ROOT.total_tries);
+  }, 1);
 }
