@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="description" content="Play Ultimate Tic Tac Toe online against the computer!">
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta charset="utf-8">
+  <title>Ultimate Tic Tac Toe</title>
+  <link rel="shortcut icon" href="https://lh3.googleusercontent.com/-0krCp6sC9Rs/VmdtOebJTGI/AAAAAAAABYg/7daaZrv2vyk/s750-no/blackcircle.png" /> 
+  <link rel="icon" href="https://lh3.googleusercontent.com/-0krCp6sC9Rs/VmdtOebJTGI/AAAAAAAABYg/7daaZrv2vyk/s750-no/blackcircle.png" type="image/gif" />
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <a href="https://github.com/the-ofek-foundation/UltimateTicTacToe"><img style="position: absolute; top: 0; left: 0; border: 0; z-index: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+  <canvas id="board"></canvas>
+  <div class="footer">
+    <div id="anal">Analysis:</div>
+    <!-- <button id="back">Back</button>
+    <button id="new-game">New Game</button>
+    <button id="stop-ai">Stop AI</button>
+    <button id="start-ai">Play AI</button> -->
+    <!-- <g:plusone size="standard" href="http://the-ofek-foundation.github.io/UltimateTicTacToe/" data-align="right" data-annotation="inline"></g:plusone> -->
+    <div id="num-trials">Trials:</div>
+  </div>
+  
+  <div id="new-game-menu">
+    <h1 style="margin-top: 0px;">New Game</h1>
+    <form id="form-new-game" action="">
+      Allow Pondering (Faster AI)? 
+      <input type="checkbox" id="allow-ponder" name="allow-ponder" checked>
+      <br />
+      AI Turn:
+      <input list="ai-turn" name="ai-turn" value="Second">
+      <datalist id="ai-turn">
+        <option value="None"></option>
+        <option value="First"></option>
+        <option value="Second"></option>
+        <option value="Both"></option>
+      </datalist>
+      <br />
+      AI Difficulty:
+      <input list="ai-diff" name="ai-diff" value="Custom">
+      <datalist id="ai-diff">
+        <option value="Custom">Set values below</option>
+        <option value="Stupid"></option>
+        <option value="ehh"></option>
+        <option value="Play Fast">Must allow pondering</option>
+        <option value="Normal"></option>
+        <option value="Play Fast ++">Must allow pondering</option>
+        <option value="Win Fast">Num Trials increases exponentially</option>
+        <option value="Hard"></option>
+        <option value="Very Hard"></option>
+        <option value="Good Luck"></option>
+        <option value="Wreckage"></option> 
+      </datalist>
+      <br />
+      Ponder? 
+      <input type="checkbox" id="ai-ponder" name="ai-ponder">
+      <br />
+      Monte Carlo Trials (500 - 250,000):
+      <input type="number" name="mc-trials" id="mc-trials" min="500" max="250000" step="500" value="5000">
+      <br />
+      Monte Carlo Expansion Constant (0 - 10):
+      <input type="range" name="mc-expansion" id="mc-expansion" min="0" max="10" step="0.1" value="2">
+      <br />
+      Monte Carlo Certainty Threshold (0% - 100%):
+      <input type="number" name="mc-certainty" min="0" max="100" step="1" value="85" required>
+      <br />
+      Enter a name for the game if you want:
+      <input type="text" name="name">
+      <br />
+      <input type="submit" value="New Game">
+      <button id="btn-new-game-cancel">Cancel</button>
+    </form>
+  </div>
+</body>
+<script src="script.js"></script>
+</html>
