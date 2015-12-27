@@ -360,8 +360,18 @@ $('#board').mousemove(function (e) {
 
 function update_analysis() {
   var range = get_MCTS_depth_range();
-  $('#anal').text("Analysis: Best-" + range[1] +" Worst-" + range[0] + " Result-" + range[2]);
+  $('#anal').text("Analysis: Depth-" + range[1] + " Result-" + range[2] + " Certainty-" + (global_ROOT && global_ROOT.total_tries > 0 ? (result_certainty(global_ROOT) * 100).toFixed(0):"0") + "%");
   $('#num-trials').text("Trials: " + global_ROOT.total_tries);
+}
+
+function result_certainty(root) {
+  if (root.total_tries > (root.hits + root.misses) * 2)
+    return 1 - (root.hits + root.misses) / root.total_tries;
+  else if (root.hits > root.misses)
+    return (root.hits - root.misses) / root.total_tries;
+  else if (root.hits < root.misses)
+    return (root.misses - root.hits) / root.total_tries;
+  else return 1 - (root.hits + root.misses) / root.total_tries;
 }
 
 function start_ponder() {
