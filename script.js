@@ -563,7 +563,7 @@ function run_MCTS(time) {
   if (!global_ROOT)
     global_ROOT = create_MCTS_root();
   var start_time = new Date().getTime();
-  while ((new Date().getTime() - start_time) / 1E3 < time) {
+  while ((new Date().getTime() - start_time) / 1E3 < time && global_ROOT.total_tries < max_trials) {
     for (var i = 0; i < 1000; i++)
       global_ROOT.choose_child();
     var error = get_certainty(global_ROOT);
