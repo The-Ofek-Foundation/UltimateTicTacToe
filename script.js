@@ -535,7 +535,6 @@ function run_MCTS(time) {
   while ((new Date().getTime() - start_time) / 1E3 < time) {
     for (var i = 0; i < 1000; i++)
       global_ROOT.choose_child();
-    update_analysis();
     var error = get_certainty(global_ROOT);
     if (global_ROOT.children.length < 2 || error < certainty_threshold)
       return;
