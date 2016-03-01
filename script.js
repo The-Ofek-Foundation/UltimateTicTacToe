@@ -90,9 +90,12 @@ function draw_grid() {
   if (prev_move && !over) {
     var next_center = [prev_move[0] % 3 * 3 + 1, prev_move[1] % 3 * 3 + 1];
     var next_center_color = board[next_center[0]][next_center[1]];
-    if (next_center_color != 5 && next_center_color != 6 && next_center_color != 3 && next_center_color != 4) {
-      brush.fillStyle = "rgba(255, 255, 0, 0.5)";
+    if (next_center_color != 5 && next_center_color != 6 && next_center_color != 3 && next_center_color != 4 && x_turn_global) {
+      brush.fillStyle = "rgba(102, 162, 255, 0.5)";
       brush.fillRect((next_center[0] / 3 | 0) * 3 * squarewidth, (next_center[1] / 3 | 0) * 3 * squarewidth, 3 * squarewidth, 3 * squarewidth);
+    } else if (next_center_color != 5 && next_center_color != 6 && next_center_color != 3 && next_center_color != 4 && !x_turn_global) {
+        brush.fillStyle = "rgba(255, 123, 123, 0.5)";
+        brush.fillRect((next_center[0] / 3 | 0) * 3 * squarewidth, (next_center[1] / 3 | 0) * 3 * squarewidth, 3 * squarewidth, 3 * squarewidth);
     }
   }
   
