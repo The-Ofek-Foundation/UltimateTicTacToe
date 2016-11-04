@@ -47,6 +47,7 @@ function pageReady() {
 	$('#board').css('left', (docwidth - boardwidth) / 2);
 	boardui.setAttribute('width', boardwidth);
 	boardui.setAttribute('height', boardwidth);
+	resizeGameSettingsTable();
 
 	newGame();
 
@@ -79,6 +80,7 @@ $(window).resize(function(event) {
 	boardui.setAttribute('height', boardwidth);
 
 	squarewidth = boardwidth / 9;
+	resizeGameSettingsTable();
 
 	drawBoard();
 });
