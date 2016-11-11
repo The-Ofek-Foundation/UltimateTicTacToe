@@ -37,8 +37,8 @@ var drawWeights, hoveredMove;
  * Automatically called once page elements are loaded. Sets location of elements in page and prompts how to change settings.
  */
 function pageReady() {
-	docwidth = $("#content-wrapper").outerWidth(true);
-	docheight = $("#content-wrapper").outerHeight(true);
+	docwidth = getElemWidth(document.getElementById('content-wrapper'));
+	docheight = getElemHeight(document.getElementById('content-wrapper'));
 	wrapperTop = $("#content-wrapper").position().top;
 
 	boardwidth = docwidth < docheight ? docwidth:docheight;
@@ -68,8 +68,8 @@ $(window).resize(function(event) {
 	$("#content-wrapper").outerWidth($(window).outerWidth(true));
 	$("#content-wrapper").outerHeight($(window).outerHeight(true) - $("#content-wrapper").position().top);
 
-	docwidth = $("#content-wrapper").outerWidth(true);
-	docheight = $("#content-wrapper").outerHeight(true);
+	docwidth = getElemWidth(document.getElementById('content-wrapper'));
+	docheight = getElemHeight(document.getElementById('content-wrapper'));
 	wrapperTop = $("#content-wrapper").position().top;
 
 	boardwidth = docwidth < docheight ? docwidth:docheight;
