@@ -1535,22 +1535,22 @@ padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){va
 
 	function getNewSettings() {
 		return {
-			'ponder': document.getElementById('ponder').checked,
-			'aiTurn': document.getElementById('ai-turn').value,
-			'timeToThink': document.getElementById('time-to-think').value,
-			'drawWeights': document.getElementById('draw-weights').checked,
-			'anti': document.getElementById('anti-tic-tac-toe').checked,
-			'tie': document.getElementById('tie-tic-tac-toe').checked,
+			'ponder': getElemId('ponder').checked,
+			'aiTurn': getElemId('ai-turn').value,
+			'timeToThink': getElemId('time-to-think').value,
+			'drawWeights': getElemId('draw-weights').checked,
+			'anti': getElemId('anti-tic-tac-toe').checked,
+			'tie': getElemId('tie-tic-tac-toe').checked,
 		}
 	}
 
 	function populateSettingsForm(settings) {
-		document.getElementById('ponder').checked = settings.ponder;
-		document.getElementById('ai-turn').value = settings.aiTurn;
-		document.getElementById('time-to-think').value = settings.timeToThink;
-		document.getElementById('draw-weights').checked = settings.drawWeights;
-		document.getElementById('anti-tic-tac-toe').checked = settings.anti;
-		document.getElementById('tie-tic-tac-toe').checked = settings.tie;
+		getElemId('ponder').checked = settings.ponder;
+		getElemId('ai-turn').value = settings.aiTurn;
+		getElemId('time-to-think').value = settings.timeToThink;
+		getElemId('draw-weights').checked = settings.drawWeights;
+		getElemId('anti-tic-tac-toe').checked = settings.anti;
+		getElemId('tie-tic-tac-toe').checked = settings.tie;
 	}
 
 	function showSettingsForm() {

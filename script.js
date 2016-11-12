@@ -10,8 +10,8 @@
  * @typedef {number[][]} board
  */
 
-var docwidth, docheight;
-var boardwidth, squarewidth;
+var docWidth, docHeight;
+var boardWidth, squareWidth;
 var board;
 var globalRoot;
 var expansionConstant;
@@ -28,28 +28,21 @@ var numChoose1, numChoose2, numChoose3, lnc1, lnc2, lnc3, stopChoose;
 var anti, tie;
 var workers, workersCallbackCount;
 
-var boardui = document.getElementById("board");
+var boardui = getElemId("board");
 var brush = boardui.getContext("2d");
 var totalEmptyGlobal, emptySpotsGlobal;
 var drawWeights, hoveredMove;
+var contentWrapper = getElemId('content-wrapper');
+var analElem = getElemId('anal'), numTrialsElem = getElemId('num-trials');
+var gameSettingsMenu = getElemId('game-settings-menu');
 
 /**
  * Automatically called once page elements are loaded. Sets location of elements in page and prompts how to change settings.
  */
 function pageReady() {
-	docwidth = getElemWidth(document.getElementById('content-wrapper'));
-	docheight = getElemHeight(document.getElementById('content-wrapper'));
-	wrapperTop = $("#content-wrapper").position().top;
-
-	boardwidth = docwidth < docheight ? docwidth:docheight;
-
-	$('#board').width(boardwidth).height(boardwidth);
-	$('#board').css('left', (docwidth - boardwidth) / 2);
-	boardui.setAttribute('width', boardwidth);
-	boardui.setAttribute('height', boardwidth);
-	resizeGameSettingsTable();
-
+	resizeBoard();
 	newGame();
+	setTimeout(resizeGameSettingsTable, 0);
 
 	setTimeout(function() {
 		var explainSettings = getLocallyStored('settingsExplained');
@@ -60,39 +53,35 @@ function pageReady() {
 	}, 100);
 };
 
+function resizeBoard() {
+	docWidth = getElemWidth(contentWrapper);
+	docHeight = getElemHeight(contentWrapper);
+	wrapperTop = contentWrapper.offsetTop;
+
+	boardWidth = docWidth < docHeight ? docWidth:docHeight;
+
+	setElemWidth(boardui, boardWidth);
+	setElemHeight(boardui, boardWidth);
+	setElemStyle(boardui, 'left', (docWidth - boardWidth) / 2 + "px")
+	boardui.setAttribute('width', boardWidth);
+	boardui.setAttribute('height', boardWidth);
+	squareWidth = boardWidth / 9;
+	resizeGameSettingsTable();
+}
+
 /**
  * Called on window resize.
  * Resizes elements for new window size.
  */
-$(window).resize(function(event) {
-	$("#content-wrapper").outerWidth($(window).outerWidth(true));
-	$("#content-wrapper").outerHeight($(window).outerHeight(true) - $("#content-wrapper").position().top);
-
-	docwidth = getElemWidth(document.getElementById('content-wrapper'));
-	docheight = getElemHeight(document.getElementById('content-wrapper'));
-	wrapperTop = $("#content-wrapper").position().top;
-
-	boardwidth = docwidth < docheight ? docwidth:docheight;
-
-	$('#board').width(boardwidth).height(boardwidth);
-	$('#board').css('left', (docwidth - boardwidth) / 2);
-	boardui.setAttribute('width', boardwidth);
-	boardui.setAttribute('height', boardwidth);
-
-	squarewidth = boardwidth / 9;
-	resizeGameSettingsTable();
-
+function onResize() {
+	resizeBoard();
 	drawBoard();
-});
+}
 
 /**
  * Creates and starts a new game of UltimateTicTacToe.
  */
 function newGame() {
-	squarewidth = boardwidth / 9;
-
-	adjustButtons();
-
 	over = false;
 	prevMove = false;
 	board = new Array(9);
@@ -141,9 +130,9 @@ function getSettings() {
  * Clears the board.
  */
 function clearBoard() {
-	brush.clearRect(0, 0, boardwidth, boardwidth);
+	brush.clearRect(0, 0, boardWidth, boardWidth);
 	brush.fillStyle = "white";
-	brush.fillRect(0, 0, boardwidth, boardwidth);
+	brush.fillRect(0, 0, boardWidth, boardWidth);
 }
 
 /**
@@ -161,7 +150,7 @@ function drawGrid() {
 					var squareRoot = MCTSGetNextRoot([i, a]);
 					if (squareRoot !== null) {
 						brush.fillStyle = getWeightedStyle(bestTries, squareRoot.totalTries, xTurnGlobal);
-						brush.fillRect(i * squarewidth, a * squarewidth, squarewidth, squarewidth);
+						brush.fillRect(i * squareWidth, a * squareWidth, squareWidth, squareWidth);
 					}
 				}
 		}
@@ -172,36 +161,36 @@ function drawGrid() {
 
 		if (board[nextCenter[0]][nextCenter[1]] < 3 && xTurnGlobal) {
 			brush.fillStyle = "rgba(102, 162, 255, 0.5)";
-			brush.fillRect((nextCenter[0] - 1) * squarewidth, (nextCenter[1] - 1) * squarewidth, 3 * squarewidth, 3 * squarewidth);
+			brush.fillRect((nextCenter[0] - 1) * squareWidth, (nextCenter[1] - 1) * squareWidth, 3 * squareWidth, 3 * squareWidth);
 		} else if (board[nextCenter[0]][nextCenter[1]] < 3 && !xTurnGlobal) {
 			brush.fillStyle = "rgba(255, 123, 123, 0.5)";
-			brush.fillRect((nextCenter[0] - 1) * squarewidth, (nextCenter[1] - 1) * squarewidth, 3 * squarewidth, 3 * squarewidth);
+			brush.fillRect((nextCenter[0] - 1) * squareWidth, (nextCenter[1] - 1) * squareWidth, 3 * squareWidth, 3 * squareWidth);
 		}
 	}
 
 	brush.lineWidth = 5;
 	brush.strokeStyle = "black";
 	brush.beginPath();
-	for (i = squarewidth * 3; i < boardwidth; i += squarewidth * 3) {
+	for (i = squareWidth * 3; i < boardWidth; i += squareWidth * 3) {
 		brush.moveTo(i, 0);
-		brush.lineTo(i, boardwidth);
+		brush.lineTo(i, boardWidth);
 	}
-	for (a = squarewidth * 3; a < boardwidth; a += squarewidth * 3) {
+	for (a = squareWidth * 3; a < boardWidth; a += squareWidth * 3) {
 		brush.moveTo(0, a);
-		brush.lineTo(boardwidth, a);
+		brush.lineTo(boardWidth, a);
 	}
 	brush.stroke();
 	brush.closePath();
 
 	brush.lineWidth = 1;
 	brush.beginPath();
-	for (i = squarewidth; i < boardwidth - 1; i += squarewidth) {
+	for (i = squareWidth; i < boardWidth - 1; i += squareWidth) {
 		brush.moveTo(i, 0);
-		brush.lineTo(i, boardwidth);
+		brush.lineTo(i, boardWidth);
 	}
-	for (a = squarewidth; a < boardwidth - 1; a += squarewidth) {
+	for (a = squareWidth; a < boardWidth - 1; a += squareWidth) {
 		brush.moveTo(0, a);
-		brush.lineTo(boardwidth, a);
+		brush.lineTo(boardWidth, a);
 	}
 	brush.stroke();
 	brush.closePath();
@@ -219,7 +208,7 @@ function getWeightedStyle(bestTries, tries, xTurn) {
  * @param  {number} y coord of piece on board
  */
 function drawPiece(x, y) {
-	var o4 = squarewidth / 4;
+	var o4 = squareWidth / 4;
 	var color;
 	switch(board[x][y]) {
 		case 1: case 3:
@@ -251,12 +240,12 @@ function drawPiece(x, y) {
 
 	switch (color) {
 		case 'x': case 'o':
-			brush.font = squarewidth + "px Arial";
-			brush.fillText(color + "", x * squarewidth + squarewidth / 2, (y + 1) * squarewidth - o4);
+			brush.font = squareWidth + "px Arial";
+			brush.fillText(color + "", x * squareWidth + squareWidth / 2, (y + 1) * squareWidth - o4);
 			break;
 		case 'X': case 'O':
-			brush.font = (squarewidth * 3) + "px Arial";
-			brush.fillText(color + "", Math.floor(x / 3) * squarewidth * 3 + squarewidth * 1.5, Math.floor(y / 3 + 1) * squarewidth * 3 - o4 * 1.5);
+			brush.font = (squareWidth * 3) + "px Arial";
+			brush.fillText(color + "", Math.floor(x / 3) * squareWidth * 3 + squareWidth * 1.5, Math.floor(y / 3 + 1) * squareWidth * 3 - o4 * 1.5);
 			break;
 		default: return;
 	}
@@ -298,10 +287,10 @@ function drawHover(move) {
  * @return {move} array containing move x and y coords
  */
 function getMove(xloc, yloc) {
-	var left = (docwidth - boardwidth) / 2;
-	if (xloc < left || xloc > left + boardwidth || yloc > boardwidth)
+	var left = (docWidth - boardWidth) / 2;
+	if (xloc < left || xloc > left + boardWidth || yloc > boardWidth)
 		return [-1, -1];
-	return [Math.floor((xloc - left) / squarewidth), Math.floor(yloc / squarewidth)];
+	return [Math.floor((xloc - left) / squareWidth), Math.floor(yloc / squareWidth)];
 }
 
 /**
@@ -402,7 +391,7 @@ function setTurn(turn, move) {
 /**
  * Called when mouse pressed, handles playing a move and then changing the turn
  */
-$('#board').mousedown(function (e) {
+document.addEventListener('mousedown', function (e) {
 	if (e.which === 3)
 		return;
 	if (aiTurn !== 'null' && xTurnGlobal === (aiTurn === 'first') || aiTurn === "both")
@@ -592,7 +581,7 @@ function tieGame(tboard, m) {
 	return true;
 }
 
-$('#board').mousemove(function (e) {
+document.addEventListener('mousemove', function (e) {
 	if (aiTurn !== 'null' && xTurnGlobal === (aiTurn === 'first') || aiTurn === "both" || over)		return;
 	var move = getMove(e.pageX, e.pageY - wrapperTop);
 	if (legalMove(board, move, prevMove, false)) {
@@ -603,8 +592,10 @@ $('#board').mousemove(function (e) {
 
 function updateAnalysis() {
 	var range = getMCTSDepthRange();
-	$('#anal').text("Analysis: Depth-" + range[1] + " Result-" + range[2] + " Certainty-" + (globalRoot && globalRoot.totalTries > 0 ? (resultCertainty(globalRoot) * 100).toFixed(0):"0") + "%");
-	$('#num-trials').text("Trials: " + globalRoot.totalTries);
+	analElem.innerHTML = "Analysis: Depth-" + range[1] + " Result-" +
+		range[2] + " Certainty-" + (globalRoot && globalRoot.totalTries > 0 ?
+		(resultCertainty(globalRoot) * 100).toFixed(0):"0") + "%";
+	numTrialsElem.innerHTML = "Trials: " + globalRoot.totalTries;
 }
 
 function resultCertainty(root) {
@@ -646,14 +637,6 @@ function startPonder() {
 
 function stopPonder() {
 	clearInterval(pondering);
-}
-
-function adjustButtons() {
-	$('.footer button').css('font-size', squarewidth / 4);
-	$('.footer').css("height", squarewidth / 2);
-	$('.footer').css('margin-bottom', squarewidth / 4 - $('#back').outerHeight(false));
-	$('.footer #anal').css('line-height', squarewidth / 2 + "px");
-	$('.footer #num-trials').css('line-height', squarewidth / 2 + "px");
 }
 
 function newCookieId() {
@@ -1068,7 +1051,7 @@ function efficiencyTest() {
 	setInterval(function() {
 		for (var i = 0; i < 1000; i++)
 			globalRoot.chooseChild(simpleBoardCopy(board), simpleSpotsCopy(emptySpotsGlobal), totalEmptyGlobal);
-		$('#num-trials').text(globalRoot.totalTries);
+		numTrialsElem.innerHTML = globalRoot.totalTries;
 	}, 1);
 }
 
@@ -1430,7 +1413,7 @@ function findBestExpansionConstant(seed, timeToThink, bound, numSimulations, pro
 	}
 }
 
-$(document).keypress(function(event) {
+document.addEventListener('keypress', function (event) {
 	switch (event.which) {
 		case 115: case 83: // s
 			showSettingsForm();
@@ -1441,53 +1424,54 @@ $(document).keypress(function(event) {
 	}
 });
 
-$('#done').click(function (event) {
+getElemId('done').addEventListener('click', function (event) {
 	var settings = getNewSettings();
 	gameSettings.setSettings(settings);
 	hideSettingsForm();
 	newGame();
 });
 
-$('#cancel').click(function (event) {
+getElemId('cancel').addEventListener('click', function (event) {
 	hideSettingsForm();
 	populateSettingsForm(gameSettings.getSettings());
 });
 
-$('#save').click(function (event) {
-	var settings = getNewSettings();
-	gameSettings.setSettings(settings);
-	gameSettings.saveSettings(settings);
-	hideSettingsForm();
-	newGame();
-});
+if (getElemId('save'))
+	getElemId('save').addEventListener('click', function (event) {
+		var settings = getNewSettings();
+		gameSettings.setSettings(settings);
+		gameSettings.saveSettings(settings);
+		hideSettingsForm();
+		newGame();
+	});
 
 function getNewSettings() {
 	return {
-		'ponder': document.getElementById('ponder').checked,
-		'aiTurn': document.getElementById('ai-turn').value,
-		'timeToThink': document.getElementById('time-to-think').value,
-		'drawWeights': document.getElementById('draw-weights').checked,
-		'anti': document.getElementById('anti-tic-tac-toe').checked,
-		'tie': document.getElementById('tie-tic-tac-toe').checked,
+		'ponder': getElemId('ponder').checked,
+		'aiTurn': getElemId('ai-turn').value,
+		'timeToThink': getElemId('time-to-think').value,
+		'drawWeights': getElemId('draw-weights').checked,
+		'anti': getElemId('anti-tic-tac-toe').checked,
+		'tie': getElemId('tie-tic-tac-toe').checked,
 	}
 }
 
 function populateSettingsForm(settings) {
-	document.getElementById('ponder').checked = settings.ponder;
-	document.getElementById('ai-turn').value = settings.aiTurn;
-	document.getElementById('time-to-think').value = settings.timeToThink;
-	document.getElementById('draw-weights').checked = settings.drawWeights;
-	document.getElementById('anti-tic-tac-toe').checked = settings.anti;
-	document.getElementById('tie-tic-tac-toe').checked = settings.tie;
+	getElemId('ponder').checked = settings.ponder;
+	getElemId('ai-turn').value = settings.aiTurn;
+	getElemId('time-to-think').value = settings.timeToThink;
+	getElemId('draw-weights').checked = settings.drawWeights;
+	getElemId('anti-tic-tac-toe').checked = settings.anti;
+	getElemId('tie-tic-tac-toe').checked = settings.tie;
 }
 
 function showSettingsForm() {
-	$('#game-settings-menu').animate({opacity: 0.9}, "slow").css('z-index', 100);
+	$(gameSettingsMenu).animate({opacity: 0.9}, "slow").css('z-index', 100);
 }
 
 function hideSettingsForm() {
-	$('#game-settings-menu').animate({opacity: 0}, "slow", function () {
-		$(this).css('z-index', -1);
+	$(gameSettingsMenu).animate({opacity: 0}, "slow", function () {
+		setElemStyle(gameSettingsMenu, 'z-index', -1);
 	});
 }
 
