@@ -32,7 +32,6 @@ var boardui = getElemId("board");
 var brush = boardui.getContext("2d");
 var totalEmptyGlobal, emptySpotsGlobal;
 var drawWeights, hoveredMove;
-var contentWrapper = getElemId('content-wrapper');
 var analElem = getElemId('anal'), numTrialsElem = getElemId('num-trials');
 var gameSettingsMenu = getElemId('game-settings-menu');
 
@@ -391,7 +390,7 @@ function setTurn(turn, move) {
 /**
  * Called when mouse pressed, handles playing a move and then changing the turn
  */
-document.addEventListener('mousedown', function (e) {
+boardui.addEventListener('mousedown', function (e) {
 	if (e.which === 3)
 		return;
 	if (aiTurn !== 'null' && xTurnGlobal === (aiTurn === 'first') || aiTurn === "both")
@@ -581,7 +580,7 @@ function tieGame(tboard, m) {
 	return true;
 }
 
-document.addEventListener('mousemove', function (e) {
+boardui.addEventListener('mousemove', function (e) {
 	if (aiTurn !== 'null' && xTurnGlobal === (aiTurn === 'first') || aiTurn === "both" || over)		return;
 	var move = getMove(e.pageX, e.pageY - wrapperTop);
 	if (legalMove(board, move, prevMove, false)) {
@@ -1463,16 +1462,6 @@ function populateSettingsForm(settings) {
 	getElemId('draw-weights').checked = settings.drawWeights;
 	getElemId('anti-tic-tac-toe').checked = settings.anti;
 	getElemId('tie-tic-tac-toe').checked = settings.tie;
-}
-
-function showSettingsForm() {
-	$(gameSettingsMenu).animate({opacity: 0.9}, "slow").css('z-index', 100);
-}
-
-function hideSettingsForm() {
-	$(gameSettingsMenu).animate({opacity: 0}, "slow", function () {
-		setElemStyle(gameSettingsMenu, 'z-index', -1);
-	});
 }
 
 function printBoard(board) {
