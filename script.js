@@ -50,7 +50,7 @@ function pageReady() {
 			setSessionData('settingsExplained', true);
 		}
 	}, 100);
-};
+}
 
 function resizeBoard() {
 	docWidth = getElemWidth(contentWrapper);
