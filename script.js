@@ -384,7 +384,8 @@ function setTurn(turn, move) {
 		stopPonder();
 	}
 
-	if (!over && aiTurn !== 'null' && (turn === (aiTurn === 'first') || aiTurn === "both"))		setTimeout(playAIMove, 25);
+	if (!over && aiTurn !== 'null' && (turn === (aiTurn === 'first') || aiTurn === "both"))
+		setTimeout(playAIMove, 25);
 }
 
 /**
