@@ -916,28 +916,28 @@ class MCTSNode {
 		this.hasChildren = false;
 		this.children = [];
 		this.result = 10; // never gonna happen
+		this.countUnexplored = 0;
 	}
 
 	chooseChild(board, emptySpots, totalEmpty) {
 		if (this.hasChildren === false) {
 			this.hasChildren = true;
 			this.children = MCTSGetChildren(this, board);
+			this.countUnexplored = this.children.length;
 		}
 		if (this.result !== 10) // leaf node
 			this.backPropogate(this.result);
 		else {
 			var i, lastMove, emptyLeft, playMoveResult;
-			var countUnexplored = 0;
-			for (i = 0; i < this.children.length; i++)
-				if (this.children[i].totalTries === 0)
-					countUnexplored++;
+			var unexplored = this.countUnexplored;
 
-			if (countUnexplored > 0) {
-				var ran = Math.floor(Math.random() * countUnexplored);
+			if (unexplored > 0) {
+				this.countUnexplored--;
+				var ran = Math.floor(Math.random() * unexplored);
 				for (i = 0; i < this.children.length; i++)
 					if (this.children[i].totalTries === 0) {
-						countUnexplored--;
-						if (countUnexplored === 0) {
+						unexplored--;
+						if (unexplored === 0) {
 							lastMove = this.children[i].lastMove;
 							emptyLeft = emptySpots[(lastMove[0] - lastMove[0] % 3) / 3][(lastMove[1] - lastMove[1] % 3) / 3];
 							playMoveResult = playMoveEmptyLeft(board, lastMove, !this.children[i].turn, emptyLeft);
