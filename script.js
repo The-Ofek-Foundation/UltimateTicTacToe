@@ -936,8 +936,7 @@ class MCTSNode {
 				var ran = Math.floor(Math.random() * unexplored);
 				for (i = 0; i < this.children.length; i++)
 					if (this.children[i].totalTries === 0) {
-						unexplored--;
-						if (unexplored === 0) {
+						if (ran === 0) {
 							lastMove = this.children[i].lastMove;
 							emptyLeft = emptySpots[(lastMove[0] - lastMove[0] % 3) / 3][(lastMove[1] - lastMove[1] % 3) / 3];
 							playMoveResult = playMoveEmptyLeft(board, lastMove, !this.children[i].turn, emptyLeft);
@@ -953,6 +952,7 @@ class MCTSNode {
 							this.children[i].backPropogate(MCTSSimulate(this.children[i], board, emptySpots, totalEmpty, playMoveResult));
 							return;
 						}
+						ran--;
 					}
 			} else {
 				var bestChild = this.children[0], bestPotential = MCTSChildPotential(this.children[0], this.totalTries), potential;
