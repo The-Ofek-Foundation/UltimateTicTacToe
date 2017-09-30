@@ -62,6 +62,7 @@ function resizeBoard() {
 	setElemWidth(boardui, boardWidth);
 	setElemHeight(boardui, boardWidth);
 	setElemStyle(boardui, 'left', (docWidth - boardWidth) / 2 + "px")
+	setElemStyle(boardui, 'top', (docHeight - boardWidth) / 2 + "px")
 	boardui.setAttribute('width', boardWidth);
 	boardui.setAttribute('height', boardWidth);
 	squareWidth = boardWidth / 9;
@@ -287,9 +288,10 @@ function drawHover(move) {
  */
 function getMove(xloc, yloc) {
 	var left = (docWidth - boardWidth) / 2;
-	if (xloc < left || xloc > left + boardWidth || yloc > boardWidth)
+	var top = (docHeight - boardWidth) / 2;
+	if (xloc < left || xloc > left + boardWidth || yloc < top || yloc > boardWidth + top)
 		return [-1, -1];
-	return [Math.floor((xloc - left) / squareWidth), Math.floor(yloc / squareWidth)];
+	return [Math.floor((xloc - left) / squareWidth), Math.floor((yloc - top) / squareWidth)];
 }
 
 /**
