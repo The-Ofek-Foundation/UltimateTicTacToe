@@ -41,7 +41,7 @@ var gameSettingsMenu = getElemId('game-settings-menu');
 function pageReady() {
 	resizeBoard();
 	newGame();
-	setTimeout(resizeGameSettingsTable, 0);
+	setTimeout(resizeSettingsTable, 0);
 
 	setTimeout(function() {
 		var explainSettings = getSessionData('settingsExplained');
@@ -65,7 +65,7 @@ function resizeBoard() {
 	boardui.setAttribute('width', boardWidth);
 	boardui.setAttribute('height', boardWidth);
 	squareWidth = boardWidth / 9;
-	resizeGameSettingsTable();
+	resizeSettingsTable();
 }
 
 /**
