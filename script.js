@@ -35,6 +35,9 @@ var drawWeights, hoveredMove;
 var analElem = getElemId('anal'), numTrialsElem = getElemId('num-trials');
 var gameSettingsMenu = getElemId('game-settings-menu');
 
+var boardHistory;
+var maxState, currState;
+
 /**
  * Automatically called once page elements are loaded. Sets location of elements in page and prompts how to change settings.
  */
@@ -102,6 +105,9 @@ function newGame() {
 	totalEmptyGlobal = 9 * 9;
 	emptySpotsGlobal = getEmptySpots(board);
 	hoveredMove = false;
+	maxState = currState = 0;
+	boardHistory = new Array(totalEmptyGlobal);
+	saveBoard();
 
 	globalRoot = createMCTSRoot();
 	drawBoard();
@@ -125,6 +131,51 @@ function getSettings() {
 	tie = gameSettings.getOrSet('tie', false);
 	timeToThink = gameSettings.getOrSet('timeToThink', 1);
 }
+
+function saveBoard() {
+	boardHistory[currState++] = {
+		'board': simpleBoardCopy(board),
+		'xTurnGlobal': xTurnGlobal,
+		'playMoveGlobal': playMoveGlobal,
+		'totalEmptyGlobal': totalEmptyGlobal,
+		'emptySpotsGlobal': simpleSpotsCopy(emptySpotsGlobal),
+		'prevMove': prevMove,
+		'over': over,
+	};
+	maxState = currState;
+}
+
+function loadBoard(index) {
+	board = simpleBoardCopy(boardHistory[index].board);
+	xTurnGlobal = boardHistory[index].xTurnGlobal;
+	playMoveGlobal = boardHistory[index].playMoveGlobal;
+	totalEmptyGlobal = boardHistory[index].totalEmptyGlobal;
+	emptySpotsGlobal = simpleSpotsCopy(boardHistory[index].emptySpotsGlobal);
+	prevMove = boardHistory[index].prevMove;
+	over = boardHistory[index].over;
+	currState = index + 1;
+}
+
+function undo() {
+	if (currState <= 1 || aiTurn === 'both') {
+		console.error("Cannot undo");
+		return false;
+	}
+	loadBoard(currState - (aiTurn === 'null' ? 2:3));
+	drawBoard();
+	return true;
+}
+
+function redo() {
+	if (currState == maxState || aiTurn === 'both') {
+		console.error("Cannot redo");
+		return false;
+	}
+	loadBoard(currState + (aiTurn === 'null' ? 0:1));
+	drawBoard();
+	return true;
+}
+
 
 /**
  * Clears the board.
@@ -385,6 +436,8 @@ function setTurn(turn, move) {
 		}, 100);
 		stopPonder();
 	}
+
+	saveBoard();
 
 	if (!over && aiTurn !== 'null' && (turn === (aiTurn === 'first') || aiTurn === "both"))
 		setTimeout(playAIMove, 25);
@@ -1405,29 +1458,15 @@ document.addEventListener('keypress', function (event) {
 		case 110: case 78: // n
 			newGame();
 			break;
+		case 117: case 85: // u
+			undo();
+			break;
+		case 114: case 82: // r
+			redo();
+			break;
+
 	}
 });
-
-getElemId('done').addEventListener('click', function (event) {
-	var settings = getNewSettings();
-	gameSettings.setSettings(settings);
-	hideSettingsForm();
-	newGame();
-});
-
-getElemId('cancel').addEventListener('click', function (event) {
-	hideSettingsForm();
-	populateSettingsForm(gameSettings.getSettings());
-});
-
-if (getElemId('save'))
-	getElemId('save').addEventListener('click', function (event) {
-		var settings = getNewSettings();
-		gameSettings.setSettings(settings);
-		gameSettings.saveSettings(settings);
-		hideSettingsForm();
-		newGame();
-	});
 
 function getNewSettings() {
 	return {

@@ -468,6 +468,8 @@ padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){va
 			stopPonder();
 		}
 
+		saveBoard();
+
 		if (!over && aiTurn !== 'null' && (turn === (aiTurn === 'first') || aiTurn === "both"))		setTimeout(playAIMove, 25);
 	}
 
