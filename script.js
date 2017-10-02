@@ -154,6 +154,7 @@ function loadBoard(index) {
 	prevMove = boardHistory[index].prevMove;
 	over = boardHistory[index].over;
 	currState = index + 1;
+	globalRoot = createMCTSRoot();
 }
 
 function undo() {
@@ -192,7 +193,7 @@ function clearBoard() {
 function drawGrid() {
 	var i, a;
 
-	if (drawWeights) {
+	if (drawWeights && globalRoot.totalTries > 0) {
 		var bestChild = mostTriedChild(globalRoot, null), bestTries;
 		if (bestChild !== null) {
 			bestTries = bestChild.totalTries;
@@ -207,7 +208,7 @@ function drawGrid() {
 		}
 	}
 
-	if (!drawWeights && prevMove && !over) {
+	if ((!drawWeights || globalRoot.totalTries === 0) && prevMove && !over) {
 		var nextCenter = [prevMove[0] % 3 * 3 + 1, prevMove[1] % 3 * 3 + 1];
 
 		if (board[nextCenter[0]][nextCenter[1]] < 3 && xTurnGlobal) {
