@@ -651,7 +651,7 @@ function updateAnalysis() {
 	analElem.innerHTML = "Analysis: Depth-" + range[1] + " Result-" +
 		range[2] + " Certainty-" + (globalRoot && globalRoot.totalTries > 0 ?
 		(resultCertainty(globalRoot) * 100).toFixed(0):"0") + "%";
-	numTrialsElem.innerHTML = "Trials: " + globalRoot.totalTries;
+	numTrialsElem.innerHTML = "Trials: " + numberWithCommas(globalRoot.totalTries);
 }
 
 function resultCertainty(root) {
@@ -849,19 +849,40 @@ function syntaxSpeed(numTrials) {
 	for (var i = 0; i < 5e8; i++) {}
 	console.log((new Date().getTime() - startTime) / 1E3);
 
+	var num;
+
+	var values = [[0, 3], [0, 4], [0, 5], [0, 6], [1, 6], [2, 6], [3, 6]];
 	startTime = new Date().getTime();
-	for (var i = 0; i < numTrials; i++) {}
+	for (var i = 0; i < numTrials; i++) {
+		values = [[0, 3], [0, 4], [0, 5], [0, 6], [1, 6], [2, 6], [3, 6]];
+	}
 	let minTime = (new Date().getTime() - startTime) / 1E3;
+
+	var temp;
 
 	console.log("Done preparing");
 
 	startTime = new Date().getTime();
 	for (var i = 0; i < numTrials; i++) {
+		values = [[0, 3], [0, 4], [0, 5], [0, 6], [1, 6], [2, 6], [3, 6]];
+		temp = values.sort(function() {
+			return Math.random() - .5
+		});
 	}
 	console.log((new Date().getTime() - startTime) / 1E3 - minTime);
 
 	startTime = new Date().getTime();
 	for (var i = 0; i < numTrials; i++) {
+		values = [[0, 3], [0, 4], [0, 5], [0, 6], [1, 6], [2, 6], [3, 6]];
+		temp = []
+		while (values.length) {
+
+		   var randomIndex = Math.floor(Math.random() * values.length),
+		       element = values.splice(randomIndex, 1)
+
+		   temp.push(element[0]);
+
+		}
 	}
 	console.log((new Date().getTime() - startTime) / 1E3 - minTime);
 }
