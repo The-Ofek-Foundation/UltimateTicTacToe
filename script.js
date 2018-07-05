@@ -46,14 +46,25 @@ function pageReady() {
 	newGame();
 	setTimeout(resizeSettingsTable, 0);
 
+	console.log("HEYA");
 	setTimeout(function() {
-		var explainSettings = getSessionData('settingsExplained');
+		var explainSettings = getSessionData('utttettingsExplained');
 		if (!explainSettings) {
-			alert("Type 's' to change your settings or 'n' to create a new game!");
-			setSessionData('settingsExplained', true);
+			explainGameRules();
+			setSessionData('utttettingsExplained', true);
 		}
 	}, 100);
 }
+
+function explainGameRules() {
+	showInfoModal("Ultimate Tic Tac Toe Rules",
+		"Welcome to my Ultimate Tic Tac Toe game, I hope you enjoy it and I welcome all feedback!",
+		"If you don't know how to play this game, I highly recommend checking out the <a target='_blank' href='https://en.wikipedia.org/wiki/Ultimate_tic-tac-toe'>Wikipedia page</a> I made for it!",
+		"To view the settings, type 's', and for a new game, 'n', or hit the buttons on the top navbar.",
+		"I hope you enjoy this fun little challenge!"
+	);
+}
+
 
 function resizeBoard() {
 	docWidth = getElemWidth(contentWrapper);
